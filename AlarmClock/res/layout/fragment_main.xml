@@ -12,18 +12,48 @@
         android:id="@+id/alarmTimePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="17dp" />
 
-    <Button
+    <EditText
+        android:id="@+id/tbSnoozeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/alarmTimePicker"
+        android:layout_below="@+id/alarmTimePicker"
+        android:layout_marginTop="74dp"
+        android:ems="10"
+        android:inputType="number" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/lblSnoozeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tbSnoozeTime"
+        android:layout_below="@+id/alarmTimePicker"
+        android:layout_marginTop="46dp"
+        android:text="Snooze time in minutes (5 minutes of not set)" />
+
+    <Button 
         android:id="@+id/setAlarmTimeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/alarmTimePicker"
-        android:layout_below="@+id/alarmTimePicker"
-        android:layout_marginTop="27dp"
+        android:layout_alignLeft="@+id/tbSnoozeTime"
+        android:layout_below="@+id/tbSnoozeTime"
+        android:layout_marginTop="17dp"
         android:onClick="saveAlarmTime"
         android:text="Set Time" />
+
+    <CheckBox
+        android:id="@+id/cbOneTimeSnooze"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/lblSnoozeTime"
+        android:layout_below="@+id/setAlarmTimeButton"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="16dp"
+        android:text="One-Time-Snooze" />
 
 </RelativeLayout>
