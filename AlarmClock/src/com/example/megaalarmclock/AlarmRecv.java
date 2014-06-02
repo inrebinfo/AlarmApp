@@ -58,6 +58,8 @@ public class AlarmRecv extends WakefulBroadcastReceiver
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
         
+        Log.i("RECV", calendar.toString());
+        
         Log.i("RECV", "hour = " + hour + ", minute = " + minute);
         
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,  

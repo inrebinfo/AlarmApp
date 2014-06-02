@@ -118,6 +118,91 @@ public class SettingsHandler
 	{
 		AlarmSettingsObject alarmObj = new AlarmSettingsObject();
 		
+		List<AlarmSettingsObject> objList = new ArrayList<AlarmSettingsObject>();
+		
+		//create list of all entries in our settings file
+		try
+        {
+	        InputStream inputStream = new FileInputStream(_context.getFilesDir()+"/"+_filename);
+	        BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+	        StringBuilder total = new StringBuilder();
+	        String line;
+	        while ((line = r.readLine()) != null)
+	        {
+	        	String[] parts = line.split(";");
+	        	AlarmSettingsObject tempObj = new AlarmSettingsObject();
+	        	tempObj.setID(parts[0]);
+	        	tempObj.setSnooze(Integer.valueOf(parts[1]));
+	        	if(parts[2] == "true")
+	        	{
+	        		tempObj.setOneTimeSnooze(true);
+	        	}
+	        	else
+	        	{
+	        		tempObj.setOneTimeSnooze(false);
+	        	}
+	        	tempObj.setURL(parts[3]);
+	            //total.append(line);
+	        	Log.i("SET", tempObj.toString());
+	        	
+	        	objList.add(tempObj);
+	        }
+	        
+	        r.close();
+        }
+        catch(Exception ex){ }
+		
+		//search for the setting line we want
+		Iterator<AlarmSettingsObject> it = objList.iterator();
+		while (it.hasNext())
+		{
+			AlarmSettingsObject obj = it.next();
+			Log.i("ITER", obj.getID());
+			if(obj.getID().equals(alarmid))
+			{
+				alarmObj = obj;
+			}
+		}
+		
 		return alarmObj;
+	}
+	
+	public List<AlarmSettingsObject> getAlarms()
+	{		
+		List<AlarmSettingsObject> objList = new ArrayList<AlarmSettingsObject>();
+		
+		//create list of all entries in our settings file
+		try
+        {
+	        InputStream inputStream = new FileInputStream(_context.getFilesDir()+"/"+_filename);
+	        BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));
+	        StringBuilder total = new StringBuilder();
+	        String line;
+	        while ((line = r.readLine()) != null)
+	        {
+	        	String[] parts = line.split(";");
+	        	AlarmSettingsObject tempObj = new AlarmSettingsObject();
+	        	tempObj.setID(parts[0]);
+	        	tempObj.setSnooze(Integer.valueOf(parts[1]));
+	        	if(parts[2] == "true")
+	        	{
+	        		tempObj.setOneTimeSnooze(true);
+	        	}
+	        	else
+	        	{
+	        		tempObj.setOneTimeSnooze(false);
+	        	}
+	        	tempObj.setURL(parts[3]);
+	            //total.append(line);
+	        	Log.i("SET", tempObj.toString());
+	        	
+	        	objList.add(tempObj);
+	        }
+	        
+	        r.close();
+        }
+        catch(Exception ex){ }
+
+		return objList;
 	}
 }
