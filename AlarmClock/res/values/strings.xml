@@ -7,5 +7,6 @@
     <string name="title_activity_alarm_fired">AlarmFiredActivity</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="title_activity_new_alarm">Add Alarm</string>
+    <string name="title_activity_edit_alarm">EditAlarmActivity</string>
 
 </resources>

@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${packageName}.${activityClass}" >
+
+    <TimePicker
+        android:id="@+id/alarmTimePickerEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnSetToneEdit"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/lblSnoozeTimeEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/alarmTimePickerEdit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="Snooze time in minutes (5 minutes if not set)" />
+
+    <EditText
+        android:id="@+id/tbSnoozeTimeEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lblSnoozeTimeEdit"
+        android:layout_below="@+id/lblSnoozeTimeEdit"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:inputType="number" />
+
+    <CheckBox
+        android:id="@+id/cbOneTimeSnoozeEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tbSnoozeTimeEdit"
+        android:layout_below="@+id/tbSnoozeTimeEdit"
+        android:text="One-Time-Snooze" />
+
+    <Button
+        android:id="@+id/btnSetToneEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/cbOneTimeSnoozeEdit"
+        android:layout_below="@+id/cbOneTimeSnoozeEdit"
+        android:onClick="selectToneEdit"
+        android:text="Select Tone" />
+
+    <TextView
+        android:id="@+id/lblAlarmToneEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnSetToneEdit"
+        android:layout_below="@+id/btnSetToneEdit"
+        android:text="Standard Notification Tone" />
+
+    <Button
+        android:id="@+id/btnEditAlarmTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lblAlarmToneEdit"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:onClick="editAlarmTime"
+        android:text="EditAlarm" />
+
+    <Button
+        android:id="@+id/btnDeleteAlarmTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnEditAlarmTime"
+        android:layout_alignLeft="@+id/btnEditAlarmTime"
+        android:onClick="deleteAlarmTime"
+        android:text="Delete" />
+
+    <CheckBox
+        android:id="@+id/cbIsActive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnDeleteAlarmTime"
+        android:layout_alignBottom="@+id/btnDeleteAlarmTime"
+        android:layout_centerHorizontal="true"
+        android:text="Active?" />
+
+</RelativeLayout>

@@ -1,12 +1,18 @@
 package com.example.megaalarmclock;
 
+import android.util.Log;
+
 public class AlarmSettingsObject
 {
 	private String _identifier;
 	private int _snooze;
-	private boolean _onetimesnooze;
+	private String _onetimesnooze;
 	private String _songURL;
+	private String _isActive;
+	private int _hour;
+	private int _minute;
 	
+	//id;active;hour;minute;snooze;onetimesnooze;url;
 	
 	public int getSnooze()
 	{
@@ -38,13 +44,43 @@ public class AlarmSettingsObject
 		_identifier = value;
 	}
 	
-	public boolean getOneTimeSnooze()
+	public String getOneTimeSnooze()
 	{
 		return _onetimesnooze;
 	}
 	
-	public void setOneTimeSnooze(boolean value)
+	public void setOneTimeSnooze(String value)
 	{
 		_onetimesnooze = value;
+	}
+	
+	public String getActive()
+	{
+		return _isActive;
+	}
+	
+	public void setActive(String value)
+	{
+		_isActive = value;	
+	}
+	
+	public int getHour()
+	{
+		return _hour;
+	}
+	
+	public void setHour(int value)
+	{
+		_hour = value;
+	}
+	
+	public int getMinute()
+	{
+		return _minute;
+	}
+	
+	public void setMinute(int value)
+	{
+		_minute = value;
 	}
 }

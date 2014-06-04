@@ -25,18 +25,28 @@ public class AlarmFiredActivity extends Activity
 {
 
 	
-	public MediaPlayer mMediaPlayer;
-	public Vibrator vVibrator;
-	public Timer timer = new Timer();
-	public Button snoozeBtn;
-	public Button killBtn;
-	public String alarmID;
-	public int snoozeTime;
+	private MediaPlayer mMediaPlayer;
+	private Vibrator vVibrator;
+	private Timer timer = new Timer();
+	private Button snoozeBtn;
+	private Button killBtn;
+	private String alarmID;
+	private int snoozeTime;
+	private AlarmSettingsObject settingsObj;
+	private boolean snoozed = false;
+
+    final Handler h = new Handler();
+    float leftVol = 0f;
+    float rightVol = 0f;
+
 	private Handler btnHandler = new Handler()
 	{ 
 	     public void handleMessage(Message msg)
 	     {
-	    	 snoozeBtn.setEnabled(true);
+	    	 if(snoozed == false)
+	    	 {
+	    		 snoozeBtn.setEnabled(true);
+	    	 }
 	     } 
 	 }; 
 	@Override
@@ -51,12 +61,16 @@ public class AlarmFiredActivity extends Activity
 		
     	SettingsHandler settingsHandler = new SettingsHandler(this.getApplicationContext());
     	
-    	AlarmSettingsObject settingsObj = settingsHandler.getAlarm(value1);
+    	settingsObj = settingsHandler.getAlarm(value1);
     	
-    	int snoozeTime = settingsObj.getSnooze();
+    	snoozeTime = settingsObj.getSnooze();
     	
     	playSound();
         vibrate();
+        
+        settingsObj.setActive("false");
+        
+        settingsHandler.editAlarm(settingsObj);
 	}
 	
 	public void snoozeBtnClicked(View view) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException
@@ -64,6 +78,11 @@ public class AlarmFiredActivity extends Activity
 		stopVibrate();
 		stopPlayer();
 		snoozeAction();
+		
+		if(settingsObj.getOneTimeSnooze().equals("true"))
+		{
+			snoozed = true;
+		}
 
 		snoozeBtn = (Button)findViewById(R.id.snoozeBtn);
 		snoozeBtn.setEnabled(false);
@@ -81,7 +100,11 @@ public class AlarmFiredActivity extends Activity
 		snoozeBtn = (Button)findViewById(R.id.snoozeBtn);
 		snoozeBtn.setEnabled(false);
 		
+		timer.cancel(); 
+		
 		Log.i("FIRED", "kill btn clicked");
+		
+		finish();
 	}
 	
 	public void stopVibrate()
@@ -101,23 +124,60 @@ public class AlarmFiredActivity extends Activity
     	
     	try
     	{
-	    	Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    		Uri soundUri;
+    		
+    		if(!settingsObj.getURL().equals("null"))
+    		{
+    			try
+    			{
+    				soundUri = Uri.parse(settingsObj.getURL());
+    			}
+    			catch(Exception ex)
+    			{
+    				Log.i("FIRED", ex.getMessage());
+        			soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    			}
+    		}
+    		else
+    		{
+    			soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    		}
+    		//soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    		Log.i("FIRED", "uri = "+soundUri.toString());
+    		
 		    mMediaPlayer.setDataSource(this, soundUri);
 		    final AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 	
+		    
 		    if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
 		        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
 		        mMediaPlayer.setLooping(true);
 		        mMediaPlayer.prepare();
 		        mMediaPlayer.start();
+		        
+		    	
+		        
+	            Runnable increaseVol = new Runnable(){
+	                public void run(){
+	                	mMediaPlayer.setVolume(leftVol, rightVol);
+	                    if(leftVol < 2.0f){
+	                        leftVol += .05f;
+	                        rightVol += .05f;
+	                        h.postDelayed(this, 1000);
+	                    }
+	                }
+	            };
+
+
+	            h.post(increaseVol);
 		    }
     	}
     	catch(Exception ex)
     	{
-    		Log.i("RECV", ex.getMessage());
+    		Log.i("FIRED", ex.getMessage());
     	}
     }
-    
+	    
     private void vibrate()
     {
     	long[] pattern = {1000, 250, 1000, 250};
@@ -127,21 +187,20 @@ public class AlarmFiredActivity extends Activity
     
     public synchronized void snoozeAction()
     {
-        timer.cancel(); //this will cancel the current task. if there is no active task, nothing happens
-        timer = new Timer();
-
-        TimerTask action = new TimerTask()
-        {
-            public void run()
-            {
-            	playSound();
-            	vibrate();
-            	
-            	btnHandler.obtainMessage(1).sendToTarget();
-            }
-
-        };
-
-        timer.schedule(action, snoozeTime*60000);
+		timer.cancel(); //this will cancel the current task. if there is no active task, nothing happens
+		timer = new Timer();
+		
+		TimerTask action = new TimerTask()
+		{
+			public void run()
+			{
+				playSound();
+				vibrate();
+				            	
+				btnHandler.obtainMessage(1).sendToTarget();
+			}
+		};
+		
+		timer.schedule(action, snoozeTime*60000);
     }
 }

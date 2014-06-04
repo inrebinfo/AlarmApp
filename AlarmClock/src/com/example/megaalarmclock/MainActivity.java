@@ -9,40 +9,57 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.*;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends Activity {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
 		ListView listview = (ListView)findViewById(R.id.lwAlarmItems);
-		
-		//http://wptrafficanalyzer.in/blog/enabling-multi-selection-mode-in-listview-by-adding-togglebutton-using-custom-layout-in-android/
-		
+				
 		SettingsHandler settingsHandler = new SettingsHandler(this.getApplicationContext());
 		
 		List<AlarmSettingsObject> list = settingsHandler.getAlarms(); 
 		List<String> idList = new ArrayList<String>();
 		
-
-		String[] arr = new String[list.size()];
-		
-		int i = 0;
 		for(AlarmSettingsObject obj : list)
 		{
-			idList.add(obj.getID());
-			arr[i] = obj.getID();
-			Log.i("MAIN", obj.getID());
-			i++;
+			idList.add(obj.getHour()+":"+obj.getMinute()+"; "+obj.getActive()+"; "+obj.getID());
 		}
 		
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this.getApplicationContext(), android.R.layout.simple_list_item_1, idList);
+		//T O D O : 
+		//alarm aktivieren/deaktivieren im edit
+		
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this.getApplicationContext(), R.layout.list_item, idList);
 
-		listview.setAdapter(arrayAdapter); 
+		listview.setAdapter(arrayAdapter);
+		
+		listview.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+            	String entry = (String) parent.getItemAtPosition(position);
+                Intent intent = new Intent(MainActivity.this, EditAlarmActivity.class);
+                String message = entry;
+                String[] parts = message.split(";");
+                intent.putExtra("alarmid", parts[2].trim());
+                startActivity(intent);
+            }
+        });
+	}
+	
+	@Override
+	protected void onResume() {
+
+	   super.onResume();
+	   this.onCreate(null);
 	}
 	
 	public void addNewAlarm(View view) throws IllegalArgumentException, SecurityException, IllegalStateException, IOException

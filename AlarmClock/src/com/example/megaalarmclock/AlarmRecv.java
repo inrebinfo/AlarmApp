@@ -26,17 +26,8 @@ public class AlarmRecv extends WakefulBroadcastReceiver
         Intent service = new Intent(context, ScheduleSrvc.class);
         service.putExtra("alarmid", value1);
          
-        Bundle bundle = service.getExtras();
-        
-        for (String key : bundle.keySet()) {
-            Object value = bundle.get(key);
-            Log.d("RECV", String.format("%s %s (%s)", key,  
-                value.toString(), value.getClass().getName()));
-        }
-        
         startWakefulService(context, service);
         
-        //Log.i("RECV", "(onReceive intent) snoozeTime = "+String.valueOf(snoozeTime));
         Log.i("RECV", "starting wakeful service");
     }
 
@@ -50,7 +41,9 @@ public class AlarmRecv extends WakefulBroadcastReceiver
         
         Log.i("RECV", "alarmid onreceive: "+intent.getStringExtra("alarmid"));
         
-        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        int intentID = Integer.parseInt(alarmid);
+        
+        alarmIntent = PendingIntent.getBroadcast(context, intentID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
                
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -70,11 +63,16 @@ public class AlarmRecv extends WakefulBroadcastReceiver
     }
 
 
-    public void cancelAlarm(Context context)
+    public void cancelAlarm(Context context, int hour, int minute, String alarmid)
     {
-        if (alarmMgr!= null) {
-            alarmMgr.cancel(alarmIntent);
-        }
-
+    	alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, AlarmRecv.class);
+        intent.putExtra("alarmid", alarmid);
+        
+        int intentID = Integer.parseInt(alarmid);
+        
+        alarmIntent = PendingIntent.getBroadcast(context, intentID, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        
+        alarmMgr.cancel(alarmIntent);
     }
 }
