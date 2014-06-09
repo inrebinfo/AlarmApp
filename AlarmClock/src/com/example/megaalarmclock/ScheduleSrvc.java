@@ -36,7 +36,6 @@ public class ScheduleSrvc extends IntentService
     @Override
     protected void onHandleIntent(Intent intent)
     {
-    	
     	String alarmid = intent.getStringExtra("alarmid");
     	
     	Log.i("SRVC", "alarmid: "+alarmid);
